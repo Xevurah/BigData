@@ -1,7 +1,13 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\vendor",
+    "\\vendor\\elasticsearch",
+    "\\vendor\\elasticsearch\\elasticsearch",
+    "\\vendor\\elasticsearch\\elasticsearch\\src",
+    "\\vendor\\elasticsearch\\elasticsearch\\src\\Elasticsearch",
+    "\\vendor\\elasticsearch\\elasticsearch\\src\\Elasticsearch\\Connections"
   ],
-  "SelectedNode": "\\connection.php",
+  "SelectedNode": "\\conection.php",
   "PreviewInSolutionExplorer": false
 }
