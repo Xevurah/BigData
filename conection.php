@@ -1,14 +1,10 @@
 <?php   
-require 'vendedor/autoload.php';
+require 'vendor/autoload.php';
 $hosts =  ['https://elastic:ZH8bWoMLTUobqR4lLM60hVl4@1624ac56bdb14b76a4a42fb9b47cfe77.us-east-1.aws.found.io:9243'];
 
 // Kibana
 //https://2bbe200001a241a5bdbbf0e45db1b3da.us-east-1.aws.found.io:9243/app/kibana#/dev_tools/console
 //elastic
-//
-$client = Elasticsearch/ClientBuilder::create()
-                    ->setHosts($hosts)
-                    ->build();
 $params = [
     'index' => 'idxdvcovid001'
 ];
