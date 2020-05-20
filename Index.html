@@ -1,0 +1,525 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="js/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    <title>Hello, world!</title>
+    <style>
+        input[type='radio'] {
+            transform: scale(1.5);
+        }
+
+        body {
+            text-align: center;
+            padding-top: 25px;
+        }
+        /* Set the size of the div element that contains the map */
+        #map {
+            height: 400px; /* The height is 400 pixels */
+            width: 100%; /* The width is the width of the web page */
+        }
+
+        #description {
+            font-family: Roboto;
+            font-size: 15px;
+            font-weight: 300;
+        }
+
+        #infowindow-content .title {
+            font-weight: bold;
+        }
+
+        #infowindow-content {
+            display: none;
+        }
+
+        #map #infowindow-content {
+            display: inline;
+        }
+
+        .pac-card {
+            margin: 10px 10px 0 0;
+            border-radius: 2px 0 0 2px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            outline: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            background-color: #fff;
+            font-family: Roboto;
+        }
+
+        #pac-container {
+            padding-bottom: 12px;
+            margin-right: 12px;
+        }
+
+        .pac-controls {
+            display: inline-block;
+            padding: 5px 11px;
+        }
+
+            .pac-controls label {
+                font-family: Roboto;
+                font-size: 13px;
+                font-weight: 300;
+            }
+
+        #pac-input {
+            background-color: #fff;
+            font-family: Roboto;
+            font-size: 15px;
+            font-weight: 300;
+            margin-left: 12px;
+            padding: 0 11px 0 13px;
+            text-overflow: ellipsis;
+            width: 400px;
+        }
+
+            #pac-input:focus {
+                border-color: #4d90fe;
+            }
+
+        #title {
+            color: #fff;
+            background-color: #4d90fe;
+            font-size: 25px;
+            font-weight: 500;
+            padding: 6px 12px;
+        }
+
+        #target {
+            width: 345px;
+        }
+    </style>
+</head>
+<body class="bg-info">
+    <div class="jumbotron">
+        <h1 class="display-4">Hola, Usuario!</h1>
+        <p class="lead">Este cuestionario está hecho para obtener un porcentaje de que tan expuesto estuviste al COVID-19 desde tu última salida.</p>
+        <hr class="my-4">
+        <p>Para más información sobre COVID-19.</p>
+        <p class="lead">
+            <a class="btn btn-info btn-lg" href="https://www.who.int/es/emergencies/diseases/novel-coronavirus-2019/advice-for-public/q-a-coronaviruses?gclid=CjwKCAjwh472BRAGEiwAvHVfGvzEUDBwnrw0kVoJgwtYdovsSVY4y6hz1tNF8VqLj-RgmiX4_Lgp0BoCeEkQAvD_BwE" role="button">Aprende más</a>
+        </p>
+        <form id="information" class="needs-validation" novalidate action="connection.php" method="post">
+            <hr class="my-4">
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <img src="images/washinghands.png" alt="lavarse las manos" width="25%" height="auto">
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">Lava sus manos a fondo y con frecuencia usando un desinfectante a base de alcohol o con agua y jabón?</h6>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Respuesta1" id="exampleRadios1" value="1">
+                                <label class="form-check-label" for="exampleRadios1">
+                                    Si
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Respuesta1" id="exampleRadios2" value="0">
+                                <label class="form-check-label" for="exampleRadios2">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Lavarse las manos con agua y jabón o con un desinfectante a base de alcohol mata los virus que pueda haber en sus manos.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <img src="images/distance.png" alt="lavarse las manos" width="25%" height="auto">
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">Mantiene una distancia mínima de un metro entre usted y los demás cuando sale de casa?</h6>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Respuesta2" id="exampleRadios3" value="1">
+                                <label class="form-check-label" for="exampleRadios3">
+                                    Si
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Respuesta2" id="exampleRadios4" value="0">
+                                <label class="form-check-label" for="exampleRadios4">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Cuando alguien tose, estornuda o habla despide por la nariz o la boca unas gotículas de líquido que pueden contener el virus. Si la persona que tose, estornuda o habla tiene la enfermedad y usted está demasiado cerca de ella, puede respirar las gotículas y con ellas el virus de la COVID‑19.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <img src="images/crowded.png" alt="lavarse las manos" width="25%" height="auto">
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">Evita ir a lugares concurridos?</h6>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Respuesta3" id="exampleRadios5" value="1">
+                                <label class="form-check-label" for="exampleRadios5">
+                                    Si
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Respuesta3" id="exampleRadios6" value="0">
+                                <label class="form-check-label" for="exampleRadios6">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Cuando hay aglomeraciones, hay más probabilidades de que entre en contacto estrecho con alguien que tenga COVID‑19 y es más difícil mantener una distancia física de un metro.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <img src="images/notouch.png" alt="lavarse las manos" width="25%" height="auto">
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">Evita tocarse los ojos, la nariz y la boca?</h6>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Respuesta4" id="exampleRadios7" value="1">
+                                <label class="form-check-label" for="exampleRadios7">
+                                    Si
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Respuesta4" id="exampleRadios8" value="0">
+                                <label class="form-check-label" for="exampleRadios8">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Las manos tocan muchas superficies y pueden recoger virus. Una vez contaminadas, las manos pueden transferir el virus a los ojos, la nariz o la boca. Desde allí, el virus puede entrar en su cuerpo y causarle la enfermedad.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <img src="images/masks.png" alt="lavarse las manos" width="25%" height="auto">
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">Al salir de casa utiliza una mascarilla?</h6>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Respuesta5" id="exampleRadios9" value="1">
+                                <label class="form-check-label" for="exampleRadios9">
+                                    Si
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Respuesta5" id="exampleRadios10" value="0">
+                                <label class="form-check-label" for="exampleRadios10">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Los virus se propagan a través de las gotículas. Al mantener una buena higiene respiratoria protege a las personas que lo rodean de virus como los del resfriado, la gripe y la COVID‑19.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <img src="images/nosuperficie.png" alt="lavarse las manos" width="25%" height="auto">
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">Evita tocar directamente diversas superficies cuando sale?</h6>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Respuesta6" id="exampleRadios11" value="1">
+                                <label class="form-check-label" for="exampleRadios11">
+                                    Si
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Respuesta6" id="exampleRadios12" value="0">
+                                <label class="form-check-label" for="exampleRadios12">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Diversos estudios han demostrado que el virus de la COVID‑19 puede sobrevivir hasta 72 horas en superficies de plástico y acero inoxidable, menos de 4 horas en superficies de cobre y menos de 24 horas en superficies de cartón.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3 id="hiworld">
+            </h3>
+            <h3 id="hiworld">
+            </h3>
+
+            <hr class="my-4">
+            <h3>Cuál fue el último lugar que visitaste?</h3>
+            <hr class="my-4">
+            <!--The div element for the map -->
+            <input id="pac-input" class="form-control" type="text" placeholder="Search Box">
+            <div id="map"></div>
+
+            <hr class="my-4">
+
+            <h3>En que fecha estuviste en ese lugar?</h3>
+
+            <hr class="my-4">
+
+            <div class="card text-center">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Fecha y Hora</h5>
+                    <div class="container">
+                        <div class="form-group">
+                            <div class='input-group date' >
+                                <input type='datetime-local' class="form-control" data-format="dd/MM/yyyy hh:mm:ss" name="datetimepicker1" id='datetimepicker1'/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <h3>Como podemos localizarte?</h3>
+
+            <hr class="my-4">
+
+            <div class="container">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputnombre">Nombre(s)</label>
+                        <input type="text" class="form-control" id="inputnombre" placeholder="Nombre(s)" name="inputnombre">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputapellidos">Apellidos</label>
+                        <input type="text" class="form-control" id="inputapellidos" placeholder="Apellidos" name="inputapellidos">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputemail">Email</label>
+                    <input type="email" class="form-control" id="inputemail" placeholder="micorreo@gmail.com" name="inputemail">
+                </div>
+                <div class="form-group">
+                    <label for="inputmunicipio">Municipio</label>
+                    <input type="text" class="form-control" id="inputmunicipio" placeholder="Algun lugar de México..." name="inputmunicipio">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputciudad">Ciudad</label>
+                        <input type="text" class="form-control" id="inputciudad" placeholder="Ciudad" name="inputciudad">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputgen">Genero</label>
+                        <select id="inputgen" class="form-control" name="inputgen">
+                            <option value="0" selected>Elige...</option>
+                            <option value="1">Masculino</option>
+                            <option value="2">Femenino</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputcurp">CURP</label>
+                        <input type="text" class="form-control" id="inputcurp" name="inputcurp">
+                    </div>
+                </div>
+                <hr class="my-4">
+                <h3>Tienes alguno de estos sintomas?</h3>
+                <hr class="my-4">
+                <div class="form-group">
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="tosCheck" value="0">
+                        <input class="form-check-input" type="checkbox" id="tosCheck" name="tosCheck" value="1">
+                        <label class="form-check-label" for="tosCheck">
+                            Tos
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="fiebreCheck" value="0">
+                        <input class="form-check-input" type="checkbox" id="fiebreCheck" name="fiebreCheck" value="1">
+                        <label class="form-check-label" for="fiebreCheck">
+                            Fiebre
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="cabezaCheck" value="0">
+                        <input class="form-check-input" type="checkbox" id="cabezaCheck" name="cabezaCheck" value="1">
+                        <label class="form-check-label" for="cabezaCheck">
+                            Dolor de cabeza
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="respirCheck" value="0">
+                        <input class="form-check-input" type="checkbox" id="respirCheck" name="respirCheck" value="1">
+                        <label class="form-check-label" for="respirCheck">
+                            Dificultad respiratoria
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="gargaCheck" value="0">
+                        <input class="form-check-input" type="checkbox" id="gargaCheck" name="gargaCheck" value="1">
+                        <label class="form-check-label" for="gargaCheck">
+                            Dolor en garganta
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="escurCheck" value="0">
+                        <input class="form-check-input" type="checkbox" id="escurCheck" name="escurCheck" value="1">
+                        <label class="form-check-label" for="escurCheck">
+                            Escurrimiento nasal
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="ojosCheck" value="0">
+                        <input class="form-check-input" type="checkbox" id="ojosCheck" name="ojosCheck" value="1">
+                        <label class="form-check-label" for="ojosCheck">
+                            Ojos rojos
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="hidden" name="dolorCheck" value="0">
+                        <input class="form-check-input" type="checkbox" id="dolorCheck" name="dolorCheck" value="1">
+                        <label class="form-check-label" for="dolorCheck">
+                            Dolor muscular
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <hr class="my-4">
+        <input class="btn btn-info btn-lg" type="button" value="Enviar Datos" onclick="formvalidation();">
+        <script>
+            // This example adds a search box to a map, using the Google Place Autocomplete
+            // feature. People can enter geographical searches. The search box will return a
+            // pick list containing a mix of places and predicted search terms.
+
+            // This example requires the Places library. Include the libraries=places
+            // parameter when you first load the API. For example:
+            // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+            var map;
+            function initAutocomplete() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 21.88234, lng: -102.282595 },
+                    zoom: 13,
+                    mapTypeId: 'roadmap'
+                });
+
+                // Create the search box and link it to the UI element.
+                var input = document.getElementById('pac-input');
+                var searchBox = new google.maps.places.SearchBox(input);
+                map.controls[google.maps.ControlPosition.LEFT].push(input);
+
+                // Bias the SearchBox results towards current map's viewport.
+                map.addListener('bounds_changed', function () {
+                    searchBox.setBounds(map.getBounds());
+                });
+
+                var markers = [];
+                // Listen for the event fired when the user selects a prediction and retrieve
+                // more details for that place.
+                searchBox.addListener('places_changed', function () {
+                    var places = searchBox.getPlaces();
+
+                    if (places.length == 0) {
+                        return;
+                    }
+
+                    // Clear out the old markers.
+                    markers.forEach(function (marker) {
+                        marker.setMap(null);
+                    });
+                    markers = [];
+
+                    // For each place, get the icon, name and location.
+                    var bounds = new google.maps.LatLngBounds();
+                    places.forEach(function (place) {
+                        if (!place.geometry) {
+                            console.log("Returned place contains no geometry");
+                            return;
+                        }
+                        var icon = {
+                            url: place.icon,
+                            size: new google.maps.Size(71, 71),
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(17, 34),
+                            scaledSize: new google.maps.Size(25, 25)
+                        };
+
+                        // Create a marker for each place.
+                        markers.push(new google.maps.Marker({
+                            map: map,
+                            icon: icon,
+                            title: place.name,
+                            position: place.geometry.location
+                        }));
+
+                        if (place.geometry.viewport) {
+                            // Only geocodes have viewport.
+                            bounds.union(place.geometry.viewport);
+                        } else {
+                            bounds.extend(place.geometry.location);
+                        }
+                    });
+                    map.fitBounds(bounds);
+                });
+            }
+            function formvalidation() {
+                try {
+                    var x = document.createElement("INPUT");
+                    x.setAttribute("type", "hidden");
+                    x.setAttribute("name", "latitudlon");
+                    x.setAttribute("value", JSON.stringify(map.getBounds()));
+                    document.getElementById("hiworld").appendChild(x);
+                    var obj = JSON.parse(JSON.stringify(map.getBounds()));
+                    var nor = obj["north"];
+                    var sou = obj["south"];
+                    var eas = obj["east"];
+                    var wes = obj["west"];
+                    if ((Math.abs((Math.abs(nor)) - (Math.abs(sou))) > (0.01)) || (Math.abs((Math.abs(eas)) - (Math.abs(wes))) > (0.045))) { alert("Necesita elegir una posicion mas exacta") }
+                    else { document.getElementById("information").submit(); }
+                }
+                catch (err) {
+                }
+            }
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=Key&libraries=places&callback=initAutocomplete"
+            async defer>
+    </script>
+        <hr class="my-4">
+        <p>El mundo atraviesa momentos difíciles, y para enfrentarlos, nada mejor que el optimismo.</p>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            let current_datetime = new Date()
+            let formatted_date = current_datetime.getFullYear() + "-" + ('0' +(current_datetime.getMonth() + 1)).slice(-2) + "-" + ('0' + current_datetime.getDate()).slice(-2) + "T" + ('0' +current_datetime.getHours()).slice(-2) + ":" + ('0' +current_datetime.getMinutes()).slice(-2)
+            $('#datetimepicker1').val(formatted_date);
+        });
+    </script>
+</body>
+</html>
