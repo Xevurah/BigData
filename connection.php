@@ -8,9 +8,14 @@ $client = Elasticsearch\ClientBuilder::create()
 					->setHosts($hosts)
 					->build();
 
-if (isset($_POST['latitudlon'])){
-    $json = $_POST["latitudlon"];
-}else $json = "{\"south\":21.85047776866842,\"west\":-102.32387956115721,\"north\":21.914195116426935,\"east\":-102.24131043884276}";
+
+//if (isset($_POST['latitudlon'])){
+//   $json = $_POST["latitudlon"];
+//}else{
+//	$json = "{\"south\":21.85047776866842,\"west\":-102.32387956115721,\"north\":21.914195116426935,\"east\":-102.24131043884276}";}
+$json = "{\"south\":21.85047776866842,\"west\":-102.32387956115721,\"north\":21.914195116426935,\"east\":-102.24131043884276}";
+// Aqui arriba se utiliza un json de ejemplo de recepcion de datos para armar mapa
+
 
 // latitudlon example:
 // {"south":21.85047776866842,"west":-102.32387956115721,"north":21.914195116426935,"east":-102.24131043884276}
@@ -20,26 +25,26 @@ $coincidenciafecha = 0;
 
 if (isset($_POST['Respuesta1'])){
     $respuesta1 = $_POST["Respuesta1"];
-}else $respuesta1 = "0";
+}else {$respuesta1 = "0";}
 if (isset($_POST['Respuesta2'])){
     $respuesta2 = $_POST["Respuesta2"];
-}else $respuesta2 = "0";
+}else{ $respuesta2 = "0";}
 if (isset($_POST['Respuesta3'])){
     $respuesta3 = $_POST["Respuesta3"];
-}else $respuesta3 = "0";
+}else {$respuesta3 = "0";}
 if (isset($_POST['Respuesta4'])){
     $respuesta4 = $_POST["Respuesta4"];
-}else $respuesta4 = "0";
+}else{ $respuesta4 = "0";}
 if (isset($_POST['Respuesta5'])){
     $respuesta5 = $_POST["Respuesta5"];
-}else $respuesta5 = "0";
+}else {$respuesta5 = "0";}
 if (isset($_POST['Respuesta6'])){
     $respuesta6 = $_POST["Respuesta6"];
-}else $respuesta6 = "0";
+}else {$respuesta6 = "0";}
 
 if (isset($_POST['datetimepicker1'])){
     $datetime = $_POST["datetimepicker1"];
-}else $datetime = "0";
+}else {$datetime = "0";}
 
 $nombre = $_POST["inputnombre"];
 $apellidos = $_POST["inputapellidos"];
