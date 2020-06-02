@@ -13,12 +13,48 @@ $client = Elasticsearch\ClientBuilder::create()
 //   $json = $_POST["latitudlon"];
 //}else{
 //	$json = "{\"south\":21.85047776866842,\"west\":-102.32387956115721,\"north\":21.914195116426935,\"east\":-102.24131043884276}";}
-$json = "{\"south\":21.85047776866842,\"west\":-102.32387956115721,\"north\":21.914195116426935,\"east\":-102.24131043884276}";
+//$json = "{\"south\":21.85047776866842,\"west\":-102.32387956115721,\"north\":21.914195116426935,\"east\":-102.24131043884276}";
 // Aqui arriba se utiliza un json de ejemplo de recepcion de datos para armar mapa
 
 
 // latitudlon example:
 // {"south":21.85047776866842,"west":-102.32387956115721,"north":21.914195116426935,"east":-102.24131043884276}
+
+if (isset($_POST['marcas'])){
+    $marcas = $_POST["marcas"];
+}else {$marcas = "nyet";}
+
+
+
+if ((int)$marcas > (-1))
+{
+for($i = 0; $i <= $marcas; $i++)
+{
+if (isset($_POST['lati'.$i])){
+    $lati[$i] = $_POST['lati'.$i];
+}else {$lati[$i] = "nyet";}
+if (isset($_POST['longi'.$i])){
+    $longi[$i] = $_POST['longi'.$i];
+}else {$longi[$i] = "nyet";}
+if (isset($_POST['time'.$i])){
+    $time[$i] = $_POST['time'.$i];
+}else {$time[$i] = "nyet";}
+$timereplaced[$i] = str_replace("T", " ",$time[$i]);
+}
+}
+
+
+//echo ((int)$marcas+1). "<br>";
+
+//echo $lati[0]. "<br>";
+//echo $longi[0]. "<br>";
+//echo $timereplaced[0]. "<br>";
+//echo $lati[1]. "<br>";
+//echo $longi[1]. "<br>";
+//echo $timereplaced[1]. "<br>";
+//echo $lati[2]. "<br>";
+//echo $longi[2]. "<br>";
+//echo $timereplaced[2]. "<br>";
 
 $coincidencia = 0;
 $coincidenciafecha = 0;
@@ -46,12 +82,24 @@ if (isset($_POST['datetimepicker1'])){
     $datetime = $_POST["datetimepicker1"];
 }else {$datetime = "0";}
 
+if (isset($_POST["inputnombre"])){
 $nombre = $_POST["inputnombre"];
+}else {$nombre = "Anonimo";}
+if (isset($_POST["inputapellidos"])){
 $apellidos = $_POST["inputapellidos"];
-$email = $_POST["inputemail"];
-$municipio = $_POST["inputmunicipio"];
-$ciudad = $_POST["inputciudad"];
+}else {$apellidos = "Anonimo";}
+if (isset($_POST["edad"])){
+$edad = $_POST["edad"];
+}else {$edad = "99";}
+if (isset($_POST["inputgen"])){
 $gen = $_POST["inputgen"];
+}else {$gen = "datoprueba";}
+if (isset($_POST["inputmunicipio"])){
+$municipio = $_POST["inputmunicipio"];
+}else {$municipio = "datoprueba";}
+
+$email = $_POST["inputemail"];
+$ciudad = $_POST["inputciudad"];
 $curp = $_POST["inputcurp"];
 
 $tos = $_POST["tosCheck"];
@@ -63,35 +111,56 @@ $escur = $_POST["escurCheck"];
 $ojos = $_POST["ojosCheck"];
 $dolor = $_POST["dolorCheck"];
 
-$jsondecoded = json_decode($json,true);
+//$jsondecoded = json_decode($json,true);
 
 
-$norte = $jsondecoded["north"];
-$sur = $jsondecoded["south"];
-$este = $jsondecoded["east"];
-$oeste = $jsondecoded["west"];
+//$norte = $jsondecoded["north"];
+//$sur = $jsondecoded["south"];
+//$este = $jsondecoded["east"];
+//$oeste = $jsondecoded["west"];
 
+for($x = 0; $x <= $marcas; $x++)
+{
+//echo $lati[$x]."<br>";
+//echo $longi[$x]."<br>";
+//echo $time[$x]."<br>";
 
 $params = [
 		'index' => 'id_equipo3',
 		'type' => '_doc',
 		'body' => [
 			'query' => [
-				'geo_bounding_box' => [ 
+				'geo_distance' => [
+                    'distance' => '10m', 
 					'location' => [
-						'top_left' => [
-							"lat" => $norte,
-							"lon" => $oeste
-							],
-						"bottom_right" => [
-							"lat" => $sur,
-							"lon" => $este
-							]
+							"lat" => $lati[$x],
+							"lon" => $longi[$x]
 						]
 					]
 				]
 	]
 ];
+
+//GET id_equipo3/_search
+//{
+//    "query": {
+//        "bool" : {
+//            "must" : {
+//                "match_all" : {}
+//            },
+//            "filter" : {
+//                "geo_distance" : {
+//                    "distance" : "200km",
+//                    "location" : {
+//                        "lat" : 41.008233547347,
+//                        "lon" : -72.000022379514
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+
 
 $response = $client->search($params);
 
@@ -104,7 +173,7 @@ while ($i < $hits){
 			$i++;
 }
  
-$datetimestamp1= strtotime(substr($datetime,0,10));
+$datetimestamp1= strtotime(substr($time[$x],0,10));
 
 if (is_array($result) || is_object($result))
 {
@@ -124,11 +193,17 @@ foreach ($result as $key => $value){
 
             $resultdate = $date2plus->format('Y-m-d');
             //echo $resultdate . "<br>";
+
             $krr    = explode('-', $resultdate);
             $resultdate = implode("", $krr);
 
             $datetimestamp2= strtotime($value['fecha']);
             $datetimestamp2plus = strtotime($resultdate);
+
+            //echo $resultdate . "<br>";
+            //echo $datetimestamp1 . "<br>";
+            //echo $datetimestamp2 . "<br>";
+            //echo $datetimestamp2plus . "<br>";
 
             if ($datetimestamp1 >= $datetimestamp2 && $datetimestamp1 <= $datetimestamp2plus) 
             {$coincidenciafecha++;}
@@ -136,7 +211,41 @@ foreach ($result as $key => $value){
 			$coincidencia++;
 }
 }else{
-$coincidencia = 0;
+}
+
+}
+
+for($y = 0; $y <= $marcas; $y++)
+{
+
+$params = [
+        'index' => 'id_equipo3',
+        'type' => '_doc',
+        'body' => [
+            'name' => $nombre,
+            'lastName' => $apellidos,
+            'edad' => $edad,
+            'genero' => $gen,
+            'municipio' => $municipio,
+            'location' => [
+                'lat' => $lati[$y],
+                "lon" => $longi[$y]
+        ],
+            'fecha' => $timereplaced[$y].":00"
+    ]
+];
+
+////POST _bulk
+////{"name": "Monica",
+//// "lastName": "Lopez",
+////"edad":"14",
+////"genero":"mujer",
+////"municipio":"San francisco",
+////"location":{"lat":"21.880575627074684", "lon":"-102.2972846031189"},
+//// "fecha": "2020-05-26 05:56:00"}
+
+$response = $client->index($params);
+
 }
 
 $point = 15;
@@ -229,7 +338,7 @@ $factor;
 //echo $sur. "<br>";
 //echo $este. "<br>";
 //echo $oeste. "<br>";
-//echo $coincidencia. "<br>";
+//echo  "<br>". $coincidencia. "<br>";
 //echo $coincidenciafecha. "<br>";
 
 
@@ -422,12 +531,12 @@ header .overlay {
         var point = <?php echo $point; ?>;
         var factorporcentaje = Math.round((factor * 100 / point) *100)/100;
 
-        if (factorporcentaje < 60) {
+        if (factorporcentaje < 99) {
             $("#videoheadsub").text("El porcentaje de exposicion de COVID-19 fue de: " + factorporcentaje + "%");
             $("#videohead").text("No te confies, sigue las medidas sanitarias");
         }
         
-        if (factorporcentaje >= 60) {
+        if (factorporcentaje >= 99) {
             $("#videoheadsub").text("El porcentaje de exposicion de COVID-19 fue de: " + factorporcentaje + "%");
             $("#videohead").text("Quedate en casa");
             $("#myVideo > source").attr("src", "videos/DancingFun_Trim.mp4");

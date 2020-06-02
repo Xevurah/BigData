@@ -10,9 +10,11 @@
     <script src="js/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
     <title>Hello, world!</title>
     <style>
+
         input[type='radio'] {
             transform: scale(1.5);
         }
@@ -278,12 +280,12 @@
             <h3>Cuál fue el último lugar que visitaste?</h3>
             <hr class="my-4">
             <!--The div element for the map -->
-            <input id="pac-input" class="form-control" type="text" placeholder="Search Box">
+            <!--<input id="pac-input" class="form-control" type="text" placeholder="Search Box">-->
             <div id="map"></div>
 
             <hr class="my-4">
 
-            <h3>En que fecha estuviste en ese lugar?</h3>
+            <!--<h3>En que fecha estuviste en ese lugar?</h3>
 
             <hr class="my-4">
 
@@ -294,8 +296,8 @@
                     <h5 class="card-title">Fecha y Hora</h5>
                     <div class="container">
                         <div class="form-group">
-                            <div class='input-group date' >
-                                <input type='datetime-local' class="form-control" data-format="dd/MM/yyyy hh:mm:ss" name="datetimepicker1" id='datetimepicker1'/>
+                            <div class='input-group date'>
+                                <input type='datetime-local' class="form-control" data-format="dd/MM/yyyy hh:mm:ss" name="datetimepicker1" id='datetimepicker1' />
                             </div>
                         </div>
                     </div>
@@ -304,7 +306,7 @@
                 </div>
             </div>
 
-            <hr class="my-4">
+            <hr class="my-4">-->
 
             <h3>Como podemos localizarte?</h3>
 
@@ -409,6 +411,97 @@
                     </div>
                 </div>
             </div>
+            <div id="divlatlon">
+
+            </div>
+            <script>
+                var contando = 0;
+                function Guardalatlon(latlon, marker) {
+                    //marker.setMap(map);
+                    //marker.setMap(null);
+                    //var x = document.createElement("INPUT");
+                    //x.setAttribute("type", "text");
+                    //x.setAttribute("name", "latitudlon" + contando);
+                    //x.setAttribute("value", latlon);
+                    //document.getElementById("divlatlon").appendChild(x);
+                    //contando++;
+
+                    const swalWithBootstrapButtons = Swal.mixin({
+                        customClass: {
+                            confirmButton: 'btn btn-success',
+                            cancelButton: 'btn btn-danger'
+                        },
+                        buttonsStyling: false
+                    })
+
+                    swalWithBootstrapButtons.fire({
+                        title: 'Estas seguro?',
+                        text: "La informacion tiene que ser casi exacta!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Si!',
+                        cancelButtonText: 'No!',
+                        //reverseButtons: true,
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.value) {
+                            Swal.fire({
+                                title: 'A que hora se encontraba en el lugar?',
+                                html:
+                                    '<input type=\'datetime-local\' class=\'form-control\' data-format=\'dd/MM/yyyy hh:mm:ss\' name=\'datepi\' id=\'datepi\' />',
+                                focusConfirm: false,
+								allowOutsideClick: false,
+                                onOpen: function () {
+                                    let current_datetime = new Date()
+                                    let formatted_date = current_datetime.getFullYear() + "-" + ('0' + (current_datetime.getMonth() + 1)).slice(-2) + "-" + ('0' + current_datetime.getDate()).slice(-2) + "T" + ('0' + current_datetime.getHours()).slice(-2) + ":" + ('0' + current_datetime.getMinutes()).slice(-2)
+                                    $('#datepi').val(formatted_date);
+                                },
+                                preConfirm: () => {
+                                    var x = document.createElement("INPUT");
+                                    var y = document.createElement("INPUT");
+                                    var z = document.createElement("INPUT");
+                                    var str = latlon.slice(1, -1);
+                                    var ras = str.split(", ");
+                                    return [
+                                        marker.setMap(map),
+                                        x.setAttribute("type", "hidden"),
+                                        x.setAttribute("name", "lati" + contando),
+                                        x.setAttribute("value", ras[0]),
+                                        document.getElementById("divlatlon").appendChild(x),
+                                        y.setAttribute("type", "hidden"),
+                                        y.setAttribute("name", "longi" + contando),
+                                        y.setAttribute("value", ras[1]),
+                                        document.getElementById("divlatlon").appendChild(y),
+                                        z.setAttribute("type", "hidden"),
+                                        z.setAttribute("name", "time" + contando),
+                                        z.setAttribute("value", document.getElementById('datepi').value),
+                                        document.getElementById("divlatlon").appendChild(z),
+                                        contando++
+                                    ]
+                                }
+                            })
+                            //marker.setMap(map)
+                            //var x = document.createElement("INPUT");
+                            //x.setAttribute("type", "text");
+                            //x.setAttribute("name", "latitudlon" + contando);
+                            //x.setAttribute("value", latlon);
+                            //document.getElementById("divlatlon").appendChild(x);
+                            //contando++;
+                        } else if (
+                            /* Read more about handling dismissals below */
+                            result.dismiss === Swal.DismissReason.cancel
+                        ) {
+                            swalWithBootstrapButtons.fire(
+                                'Cancelled',
+                                'Your imaginary file is safe :)',
+                                'error'
+                            ),
+                                marker.setMap(null);
+                        }
+                    })
+
+                }
+            </script>
         </form>
 
         <hr class="my-4">
@@ -423,94 +516,56 @@
             // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
             var map;
             function initAutocomplete() {
+                var myLatlng = { lat: 21.88234, lng: -102.282595 };
                 map = new google.maps.Map(document.getElementById('map'), {
-                    center: { lat: 21.88234, lng: -102.282595 },
+                    center: myLatlng,
                     zoom: 13,
                     mapTypeId: 'roadmap'
                 });
 
-                // Create the search box and link it to the UI element.
-                var input = document.getElementById('pac-input');
-                var searchBox = new google.maps.places.SearchBox(input);
-                map.controls[google.maps.ControlPosition.LEFT].push(input);
+                // Configure the click listener.
+                map.addListener('click', function (mapsMouseEvent) {
 
-                // Bias the SearchBox results towards current map's viewport.
-                map.addListener('bounds_changed', function () {
-                    searchBox.setBounds(map.getBounds());
+                    var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+                    var beachMarker = new google.maps.Marker({
+                        position: mapsMouseEvent.latLng
+                    });
+                    Guardalatlon(mapsMouseEvent.latLng.toString(), beachMarker);
                 });
 
-                var markers = [];
-                // Listen for the event fired when the user selects a prediction and retrieve
-                // more details for that place.
-                searchBox.addListener('places_changed', function () {
-                    var places = searchBox.getPlaces();
 
-                    if (places.length == 0) {
-                        return;
-                    }
 
-                    // Clear out the old markers.
-                    markers.forEach(function (marker) {
-                        marker.setMap(null);
-                    });
-                    markers = [];
-
-                    // For each place, get the icon, name and location.
-                    var bounds = new google.maps.LatLngBounds();
-                    places.forEach(function (place) {
-                        if (!place.geometry) {
-                            console.log("Returned place contains no geometry");
-                            return;
-                        }
-                        var icon = {
-                            url: place.icon,
-                            size: new google.maps.Size(71, 71),
-                            origin: new google.maps.Point(0, 0),
-                            anchor: new google.maps.Point(17, 34),
-                            scaledSize: new google.maps.Size(25, 25)
-                        };
-
-                        // Create a marker for each place.
-                        markers.push(new google.maps.Marker({
-                            map: map,
-                            icon: icon,
-                            title: place.name,
-                            position: place.geometry.location
-                        }));
-
-                        if (place.geometry.viewport) {
-                            // Only geocodes have viewport.
-                            bounds.union(place.geometry.viewport);
-                        } else {
-                            bounds.extend(place.geometry.location);
-                        }
-                    });
-                    map.fitBounds(bounds);
-                });
             }
             function formvalidation() {
-                try {
-                    var x = document.createElement("INPUT");
-                    x.setAttribute("type", "hidden");
-                    x.setAttribute("name", "latitudlon");
-                    x.setAttribute("value", JSON.stringify(map.getBounds()));
-                    document.getElementById("hiworld").appendChild(x);
-                    var obj = JSON.parse(JSON.stringify(map.getBounds()));
-                    var nor = obj["north"];
-                    var sou = obj["south"];
-                    var eas = obj["east"];
-                    var wes = obj["west"];
-                    if ((Math.abs((Math.abs(nor)) - (Math.abs(sou))) > (0.01)) || (Math.abs((Math.abs(eas)) - (Math.abs(wes))) > (0.045))) { alert("Necesita elegir una posicion mas exacta") }
-                    else { document.getElementById("information").submit(); }
-                }
-                catch (err) {
-                }
-				document.getElementById("information").submit();
+                //try {
+                //    var x = document.createElement("INPUT");
+                //    x.setAttribute("type", "hidden");
+                //    x.setAttribute("name", "latitudlon");
+                //    x.setAttribute("value", JSON.stringify(map.getBounds()));
+                //    document.getElementById("hiworld").appendChild(x);
+                //    var obj = JSON.parse(JSON.stringify(map.getBounds()));
+                //    var nor = obj["north"];
+                //    var sou = obj["south"];
+                //    var eas = obj["east"];
+                //    var wes = obj["west"];
+                //    if ((Math.abs((Math.abs(nor)) - (Math.abs(sou))) > (0.01)) || (Math.abs((Math.abs(eas)) - (Math.abs(wes))) > (0.045))) { alert("Necesita elegir una posicion mas exacta") }
+                //    else { document.getElementById("information").submit(); }
+                //}
+                //catch (err) {
+                //}
+
+                var suma = document.createElement("INPUT");
+                suma.setAttribute("type", "hidden"),
+                suma.setAttribute("name", "marcas"),
+                suma.setAttribute("value", contando-1),
+                document.getElementById("divlatlon").appendChild(suma),
+
+                document.getElementById("information").submit();
             }
         </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=Key&libraries=places&callback=initAutocomplete"
-            async defer>
-    </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1TSaDUje72wize-zfKTkaMrHRl8z6BLg&libraries=places&callback=initAutocomplete"
+                async defer>
+        </script>
         <hr class="my-4">
         <p>El mundo atraviesa momentos difíciles, y para enfrentarlos, nada mejor que el optimismo.</p>
     </div>
@@ -518,9 +573,10 @@
     <script>
         $(document).ready(function () {
             let current_datetime = new Date()
-            let formatted_date = current_datetime.getFullYear() + "-" + ('0' +(current_datetime.getMonth() + 1)).slice(-2) + "-" + ('0' + current_datetime.getDate()).slice(-2) + "T" + ('0' +current_datetime.getHours()).slice(-2) + ":" + ('0' +current_datetime.getMinutes()).slice(-2)
+            let formatted_date = current_datetime.getFullYear() + "-" + ('0' + (current_datetime.getMonth() + 1)).slice(-2) + "-" + ('0' + current_datetime.getDate()).slice(-2) + "T" + ('0' + current_datetime.getHours()).slice(-2) + ":" + ('0' + current_datetime.getMinutes()).slice(-2)
             $('#datetimepicker1').val(formatted_date);
         });
     </script>
+
 </body>
 </html>
