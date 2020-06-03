@@ -88,19 +88,32 @@ $nombre = $_POST["inputnombre"];
 if (isset($_POST["inputapellidos"])){
 $apellidos = $_POST["inputapellidos"];
 }else {$apellidos = "Anonimo";}
-if (isset($_POST["edad"])){
-$edad = $_POST["edad"];
-}else {$edad = "99";}
+if (isset($_POST["inputemail"])){
+$email = $_POST["inputemail"];
+}else {$email = " ";}
 if (isset($_POST["inputgen"])){
 $gen = $_POST["inputgen"];
 }else {$gen = "datoprueba";}
 if (isset($_POST["inputmunicipio"])){
 $municipio = $_POST["inputmunicipio"];
 }else {$municipio = "datoprueba";}
-
-$email = $_POST["inputemail"];
+if (isset($_POST["inputciudad"])){
 $ciudad = $_POST["inputciudad"];
+}else {$ciudad = "datoprueba";}
+if (isset($_POST["inputmunicipio"])){
+$municipio = $_POST["inputmunicipio"];
+}else {$municipio = "datoprueba";}
+if (isset($_POST["inputcurp"])){
 $curp = $_POST["inputcurp"];
+}else {$curp = "datoprueba";}
+
+if (isset($_POST["symptoms"])){
+$sym = $_POST["symptoms"];
+}else {$sym = "datoprueba";}
+
+//$email = $_POST["inputemail"];
+//$ciudad = $_POST["inputciudad"];
+//$curp = $_POST["inputcurp"];
 
 $tos = $_POST["tosCheck"];
 $fiebre = $_POST["fiebreCheck"];
@@ -110,6 +123,27 @@ $garga = $_POST["gargaCheck"];
 $escur = $_POST["escurCheck"];
 $ojos = $_POST["ojosCheck"];
 $dolor = $_POST["dolorCheck"];
+
+
+$fac = 0;
+if((int)$tos>0){
+    $fac++;}
+    if((int)$fiebre>0){
+    $fac++;}
+    if((int)$check>0){
+    $fac++;}
+    if((int)$respir>0){
+    $fac++;}
+    if((int)$garga>0){
+    $fac++;}
+    if((int)$escur>0){
+    $fac++;}
+    if((int)$ojos>0){
+    $fac++;}
+    if((int)$dolor>0){
+    $fac++;}
+
+
 
 //$jsondecoded = json_decode($json,true);
 
@@ -224,9 +258,12 @@ $params = [
         'body' => [
             'name' => $nombre,
             'lastName' => $apellidos,
-            'edad' => $edad,
+            'email' => $email,
+            'curp' => $curp,
             'genero' => $gen,
             'municipio' => $municipio,
+            'ciudad' => $ciudad,
+            'symptoms' => $fac,
             'location' => [
                 'lat' => $lati[$y],
                 "lon" => $longi[$y]
