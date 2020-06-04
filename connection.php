@@ -235,7 +235,7 @@ foreach ($result as $key => $value){
             $datetimestamp2plus = strtotime($resultdate);
 
             //echo $resultdate . "<br>";
-            //echo $datetimestamp1 . "<br>";
+           // echo $datetimestamp1 . "<br>";
             //echo $datetimestamp2 . "<br>";
             //echo $datetimestamp2plus . "<br>";
 
@@ -566,15 +566,64 @@ header .overlay {
         document.getElementById("myVideo").volume = 0.2;
         var factor = <?php echo $factor; ?>;
         var point = <?php echo $point; ?>;
+		var tos = <?php echo $tos; ?>;
+		if(tos>0){
+		tos="tos"}
+		else{
+		tos=""}
+		var fiebre = <?php echo $fiebre; ?>;
+		if(fiebre>0){
+		fiebre="fiebre"}
+		else{
+		fiebre=""}
+		var check = <?php echo $check; ?>;
+		if(check>0){
+		check="dolor de cabeza"}
+		else{
+		check=""}
+		var respir = <?php echo $respir; ?>;
+		if(respir>0){
+		respir="dificultad de respirar"}
+		else{
+		respir=""}
+		var garga = <?php echo $garga; ?>;
+		if(garga>0){
+		garga="dolor de garganta"}
+		else{
+		garga=""}
+		var escur = <?php echo $escur; ?>;
+		if(escur>0){
+		escur="escurrimiento nasal"}
+		else{
+		escur=""}
+		var ojos = <?php echo $ojos; ?>;
+		if(ojos>0){
+		ojos="ojos llorosos"}
+		else{
+		ojos=""}
+		var dolor = <?php echo $dolor; ?>;
+		if(dolor>0){
+		dolor="dolor muscular"}
+		else{
+		dolor=""}
         var factorporcentaje = Math.round((factor * 100 / point) *100)/100;
 
+//$tos = $_POST["tosCheck"];
+//$fiebre = $_POST["fiebreCheck"];
+//$check = $_POST["cabezaCheck"];
+//$respir = $_POST["respirCheck"];
+//$garga = $_POST["gargaCheck"];
+//$escur = $_POST["escurCheck"];
+//$ojos = $_POST["ojosCheck"];
+//$dolor = $_POST["dolorCheck"];
+
         if (factorporcentaje < 99) {
-            $("#videoheadsub").text("El porcentaje de exposicion de COVID-19 fue de: " + factorporcentaje + "%");
+            $("#videoheadsub").text("El porcentaje de exposicion de COVID-19 fue de: " + factorporcentaje + "%\n"+ "los sintomas fueron: "+ tos +" "+ fiebre+" "+ check+" "+ respir+" "+ garga+" "+ escur+" "+ ojos+" "+ dolor);
             $("#videohead").text("No te confies, sigue las medidas sanitarias");
         }
         
         if (factorporcentaje >= 99) {
-            $("#videoheadsub").text("El porcentaje de exposicion de COVID-19 fue de: " + factorporcentaje + "%");
+            $("#videoheadsub").text("El porcentaje de exposicion de COVID-19 fue de: " + factorporcentaje + "%\n" + "los sintomas fueron: "+ tos +" "+ fiebre+" "+ check+" "+ respir+" "+ garga+" "+ escur+" "+ ojos+" "+ dolor);
             $("#videohead").text("Quedate en casa");
             $("#myVideo > source").attr("src", "videos/DancingFun_Trim.mp4");
         }
